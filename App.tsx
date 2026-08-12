@@ -180,7 +180,6 @@ export default function App() {
         {/* Footer */}
         <View style={styles.footer}>
           <Text style={styles.footerText}>© 2026 FengShui-Shifu (风水师傅). All rights reserved.</Text>
-          <Text style={styles.footerSub}>Powered by Rails 8 API + Expo React Native Web + Gemini AI</Text>
         </View>
 
       </ScrollView>
@@ -210,7 +209,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   brandIcon: {
-    color: '#FFFFFF',
     fontSize: 28,
     marginRight: 10,
   },
