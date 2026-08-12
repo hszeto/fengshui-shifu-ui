@@ -1,4 +1,4 @@
-# ⛩️ FengShui-Shifu UI (`fengshui-shifu-ui`)
+# ☯️ FengShui-Shifu UI (`fengshui-shifu-ui`)
 
 Cross-platform React Native Web (Expo) frontend for **FengShui-Shifu (风水师傅)** — AI Spatial Feng Shui & BaZi Fortune Telling Platform.
 

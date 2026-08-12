@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   StatusBar
 } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { checkApiHealth, calculateBazi, BaziCalculationResult, HealthResponse } from './src/services/api';
 
 export default function App() {
@@ -39,11 +40,11 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        
+
         {/* Navigation Bar */}
         <View style={styles.navbar}>
           <View style={styles.brandContainer}>
-            <Text style={styles.brandIcon}>⛩️</Text>
+            <MaterialCommunityIcons name="yin-yang" size={32} color="#FFFFFF" style={{ marginRight: 10 }} />
             <View>
               <Text style={styles.brandTitle}>FengShui-Shifu</Text>
               <Text style={styles.brandSubtitle}>风水师傅 • AI Fortune & Spatial Audit</Text>
@@ -113,7 +114,7 @@ export default function App() {
         {baziResult && (
           <View style={styles.resultsContainer}>
             <Text style={styles.sectionHeader}> Your Celestial Energy Profile</Text>
-            
+
             <View style={styles.resultGrid}>
               {/* Day Master Element */}
               <View style={[styles.resultCard, styles.goldBorder]}>
@@ -209,6 +210,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   brandIcon: {
+    color: '#FFFFFF',
     fontSize: 28,
     marginRight: 10,
   },
