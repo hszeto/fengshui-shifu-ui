@@ -33,6 +33,12 @@ export interface BaziCalculationResult {
     fu_wei: string;
   };
   today_luck_teaser: string;
+  birth_time?: string;
+  hour_branch?: {
+    name: string;
+    chinese: string;
+    animal: string;
+  };
 }
 
 export interface BaziApiResponse {

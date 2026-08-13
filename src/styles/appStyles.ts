@@ -214,7 +214,7 @@ export const styles = StyleSheet.create({
   },
   resultCard: {
     flex: 1,
-    minWidth: 240,
+    minWidth: 200,
     backgroundColor: colors.cardBg,
     padding: 20,
     borderRadius: 14,

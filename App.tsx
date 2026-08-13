@@ -266,17 +266,43 @@ export default function App() {
                 </Text>
               </View>
 
-              {/* Kua / Gua Number */}
-              <View style={[styles.resultCard, styles.redBorder]}>
-                <Text style={styles.cardTag}>KUA NUMBER (卦号)</Text>
-                <Text style={styles.kuaNumber}>#{baziResult.kua_number}</Text>
-                <Text style={styles.cardDesc}>Group: {baziResult.kua_profile.group} Group</Text>
-                <View style={styles.directionPill}>
-                  <Text style={styles.directionText}>
-                    Top Wealth Direction: {baziResult.kua_profile.sheng_qi} (Sheng Qi)
+              {/* Day Branch (日支) */}
+              {baziResult.day_branch && (
+                <View style={[styles.resultCard, styles.goldBorder]}>
+                  <Text style={styles.cardTag}>DAY BRANCH (日支)</Text>
+                  <Text style={styles.dayMasterTitle}>{baziResult.day_branch.name}</Text>
+                  <Text style={styles.dayMasterChinese}>{baziResult.day_branch.chinese}</Text>
+                  <Text style={styles.cardDesc}>
+                    Zodiac Animal: {baziResult.day_branch.animal}
                   </Text>
                 </View>
-              </View>
+              )}
+
+              {/* Hour Branch (时支) if birth time provided */}
+              {baziResult.hour_branch && (
+                <View style={[styles.resultCard, styles.goldBorder]}>
+                  <Text style={styles.cardTag}>HOUR BRANCH (时支)</Text>
+                  <Text style={styles.dayMasterTitle}>{baziResult.hour_branch.name}</Text>
+                  <Text style={styles.dayMasterChinese}>{baziResult.hour_branch.chinese}</Text>
+                  <Text style={styles.cardDesc}>
+                    Zodiac Animal: {baziResult.hour_branch.animal}
+                  </Text>
+                </View>
+              )}
+
+              {/* Kua / Gua Number */}
+              {baziResult.kua_number && (
+                <View style={[styles.resultCard, styles.redBorder]}>
+                  <Text style={styles.cardTag}>KUA NUMBER (卦号)</Text>
+                  <Text style={styles.kuaNumber}>#{baziResult.kua_number}</Text>
+                  <Text style={styles.cardDesc}>Group: {baziResult.kua_profile.group} Group</Text>
+                  <View style={styles.directionPill}>
+                    <Text style={styles.directionText}>
+                      Top Wealth Direction: {baziResult.kua_profile.sheng_qi} (Sheng Qi)
+                    </Text>
+                  </View>
+                </View>
+              )}
             </View>
 
             {/* Daily Forecast Teaser */}
