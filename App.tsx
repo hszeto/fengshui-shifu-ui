@@ -180,17 +180,19 @@ export default function App() {
           </View>
         </View>
 
-        {/* Paid Plan CTA */}
-        <View style={styles.ctaBanner}>
-          <Text style={styles.ctaTag}>PREMIUM AI SPATIAL AUDIT</Text>
-          <Text style={styles.ctaTitle}>Upload Photos & Videos of Your Home</Text>
-          <Text style={styles.ctaSubtitle}>
-            Our Gemini AI analyzes your room layout, detects poison arrows, and overlays your Bagua map with Google Maps external street orientation.
-          </Text>
-          <TouchableOpacity style={styles.ctaBtn}>
-            <Text style={styles.ctaBtnText}>Upgrade to Premium ($9.99/mo) 🚀</Text>
-          </TouchableOpacity>
-        </View>
+        {/* Paid Plan CTA. Hidden for future development.*/}
+        {false && (
+          <View style={styles.ctaBanner}>
+            <Text style={styles.ctaTag}>PREMIUM AI SPATIAL AUDIT</Text>
+            <Text style={styles.ctaTitle}>Upload Photos & Videos of Your Home</Text>
+            <Text style={styles.ctaSubtitle}>
+              Our Gemini AI analyzes your room layout, detects poison arrows, and overlays your Bagua map with Google Maps external street orientation.
+            </Text>
+            <TouchableOpacity style={styles.ctaBtn}>
+              <Text style={styles.ctaBtnText}>Upgrade to Premium ($9.99/mo) 🚀</Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
         {/* Footer */}
         <View style={styles.footer}>
