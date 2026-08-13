@@ -35,6 +35,12 @@ export interface BaziCalculationResult {
   today_luck_teaser: string;
 }
 
+export interface BaziApiResponse {
+  success: boolean;
+  data?: BaziCalculationResult;
+  error?: string;
+}
+
 export async function checkApiHealth(): Promise<HealthResponse | null> {
   try {
     const res = await fetch(`${API_BASE_URL}/health`);
@@ -46,21 +52,43 @@ export async function checkApiHealth(): Promise<HealthResponse | null> {
   }
 }
 
-export async function calculateBazi(birthDate: string, gender: string = 'male'): Promise<BaziCalculationResult | null> {
+export async function calculateBazi(
+  birthDate: string,
+  gender?: string,
+  birthTime?: string
+): Promise<BaziApiResponse> {
   try {
+    const payload: Record<string, any> = { birth_date: birthDate };
+    if (gender && gender !== 'unspecified') {
+      payload.gender = gender;
+    }
+    if (birthTime) {
+      payload.birth_time = birthTime;
+    }
+
     const res = await fetch(`${API_BASE_URL}/bazi/calculate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ birth_date: birthDate, gender }),
+      body: JSON.stringify(payload),
     });
 
-    if (res.ok) {
-      const json = await res.json();
-      if (json.success && json.data) return json.data;
-    }
-  } catch (err) {
-    console.warn('API error, using client-side fallback calculation:', err);
-  }
+    const json = await res.json().catch(() => null);
 
-  return null;
+    if (res.ok && json && json.success && json.data) {
+      return { success: true, data: json.data };
+    }
+
+    if (json && json.error) {
+      return { success: false, error: json.error };
+    }
+
+    if (json && json.message) {
+      return { success: false, error: json.message };
+    }
+
+    return { success: false, error: `Server returned status ${res.status}` };
+  } catch (err) {
+    console.warn('API connection error:', err);
+    return { success: false, error: 'Unable to connect to the server. Please check your connection.' };
+  }
 }

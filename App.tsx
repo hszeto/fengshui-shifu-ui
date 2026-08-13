@@ -14,8 +14,12 @@ import { checkApiHealth, calculateBazi, BaziCalculationResult, HealthResponse } 
 import { styles } from './src/styles/appStyles';
 
 export default function App() {
-  const [birthDate, setBirthDate] = useState<string>('1990-01-01');
-  const [gender, setGender] = useState<string>('male');
+  const [birthYear, setBirthYear] = useState<string>('1990');
+  const [birthMonth, setBirthMonth] = useState<string>('01');
+  const [birthDay, setBirthDay] = useState<string>('01');
+  const [birthHour, setBirthHour] = useState<string>('');
+  const [birthMinute, setBirthMinute] = useState<string>('');
+  const [gender, setGender] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [apiHealth, setApiHealth] = useState<HealthResponse | null>(null);
   const [baziResult, setBaziResult] = useState<BaziCalculationResult | null>(null);
@@ -25,21 +29,81 @@ export default function App() {
     // Check backend API connection status
     checkApiHealth().then((data) => setApiHealth(data));
     // Initial calculation for demo
-    handleCalculate('1990-01-01', 'male');
+    handleCalculate('1990', '01', '01', undefined, undefined, '');
   }, []);
 
-  const handleCalculate = async (dateToUse?: string, genderToUse?: string) => {
+  const handleCalculate = async (
+    yearToUse?: string,
+    monthToUse?: string,
+    dayToUse?: string,
+    hourToUse?: string,
+    minuteToUse?: string,
+    genderToUse?: string
+  ) => {
     setLoading(true);
     setError(null);
 
-    const targetDate = dateToUse || birthDate;
-    const targetGender = genderToUse || gender;
-    const res = await calculateBazi(targetDate, targetGender);
+    const y = (yearToUse !== undefined ? yearToUse : birthYear).trim();
+    const m = (monthToUse !== undefined ? monthToUse : birthMonth).trim();
+    const d = (dayToUse !== undefined ? dayToUse : birthDay).trim();
+    const hr = (hourToUse !== undefined ? hourToUse : birthHour).trim();
+    const min = (minuteToUse !== undefined ? minuteToUse : birthMinute).trim();
+    const targetGender = genderToUse !== undefined ? genderToUse : gender;
 
-    if (res) {
-      setBaziResult(res);
+    const yNum = parseInt(y, 10);
+    const mNum = parseInt(m, 10);
+    const dNum = parseInt(d, 10);
+
+    if (isNaN(yNum) || yNum < 1900 || yNum > 2100) {
+      setError('Please enter a valid 4-digit Year (e.g. 1990).');
+      setLoading(false);
+      return;
+    }
+    if (isNaN(mNum) || mNum < 1 || mNum > 12) {
+      setError('Please enter a valid Month between 1 and 12.');
+      setLoading(false);
+      return;
+    }
+    if (isNaN(dNum) || dNum < 1 || dNum > 31) {
+      setError('Please enter a valid Day between 1 and 31.');
+      setLoading(false);
+      return;
+    }
+
+    // Format optional birth time (HH:MM)
+    // If Hour is provided, format as HH:MM (defaulting Minute to 00 if left blank).
+    // If Hour is blank, birth time is omitted (and clearing orphaned Minute box if entered).
+    let formattedTime: string | undefined = undefined;
+    if (hr !== '') {
+      const hrNum = parseInt(hr, 10);
+      if (isNaN(hrNum) || hrNum < 0 || hrNum > 23) {
+        setError('Please enter a valid Hour between 00 and 23.');
+        setLoading(false);
+        return;
+      }
+      const minNum = min !== '' ? parseInt(min, 10) : 0;
+      if (isNaN(minNum) || minNum < 0 || minNum > 59) {
+        setError('Please enter a valid Minute between 00 and 59.');
+        setLoading(false);
+        return;
+      }
+      const formattedHr = hrNum < 10 ? `0${hrNum}` : `${hrNum}`;
+      const formattedMin = minNum < 10 ? `0${minNum}` : `${minNum}`;
+      formattedTime = `${formattedHr}:${formattedMin}`;
+    } else if (min !== '') {
+      setBirthMinute('');
+    }
+
+    const formattedMonth = mNum < 10 ? `0${mNum}` : `${mNum}`;
+    const formattedDay = dNum < 10 ? `0${dNum}` : `${dNum}`;
+    const formattedDate = `${yNum}-${formattedMonth}-${formattedDay}`;
+
+    const res = await calculateBazi(formattedDate, targetGender, formattedTime);
+
+    if (res.success && res.data) {
+      setBaziResult(res.data);
     } else {
-      setError('Unable to connect to the server. Please try again later.');
+      setError(res.error || 'Failed to calculate BaZi. Please try again.');
     }
     setLoading(false);
   };
@@ -78,27 +142,88 @@ export default function App() {
 
           {/* Guest Input Form */}
           <View style={styles.formCard}>
-            <Text style={styles.formLabel}>Date of Birth (YYYY-MM-DD)</Text>
-            <TextInput
-              style={styles.input}
-              value={birthDate}
-              onChangeText={setBirthDate}
-              placeholder="1990-05-15"
-              placeholderTextColor="#64748B"
-              keyboardType="numeric"
-            />
+            <Text style={styles.formLabel}>Date of Birth</Text>
+            <View style={styles.dateRow}>
+              <View style={styles.dateColYear}>
+                <TextInput
+                  style={styles.dateInput}
+                  value={birthYear}
+                  onChangeText={setBirthYear}
+                  placeholder="YYYY"
+                  placeholderTextColor="#64748B"
+                  keyboardType="numeric"
+                  maxLength={4}
+                />
+                <Text style={styles.dateSubLabel}>Year</Text>
+              </View>
+              <View style={styles.dateColMonth}>
+                <TextInput
+                  style={styles.dateInput}
+                  value={birthMonth}
+                  onChangeText={setBirthMonth}
+                  placeholder="MM"
+                  placeholderTextColor="#64748B"
+                  keyboardType="numeric"
+                  maxLength={2}
+                />
+                <Text style={styles.dateSubLabel}>Month</Text>
+              </View>
+              <View style={styles.dateColDay}>
+                <TextInput
+                  style={styles.dateInput}
+                  value={birthDay}
+                  onChangeText={setBirthDay}
+                  placeholder="DD"
+                  placeholderTextColor="#64748B"
+                  keyboardType="numeric"
+                  maxLength={2}
+                />
+                <Text style={styles.dateSubLabel}>Day</Text>
+              </View>
+            </View>
 
-            <Text style={styles.formLabel}>Gender</Text>
+            {/* Optional Birth Time */}
+            <Text style={styles.formLabel}>Birth Time (Optional, 24-hr local time at birthplace)</Text>
+            <View style={styles.timeRow}>
+              <View style={styles.timeCol}>
+                <TextInput
+                  style={styles.dateInput}
+                  value={birthHour}
+                  onChangeText={setBirthHour}
+                  placeholder="HH"
+                  placeholderTextColor="#64748B"
+                  keyboardType="numeric"
+                  maxLength={2}
+                />
+                <Text style={styles.dateSubLabel}>Hour (00-23)</Text>
+              </View>
+              <Text style={styles.timeSeparator}>:</Text>
+              <View style={styles.timeCol}>
+                <TextInput
+                  style={styles.dateInput}
+                  value={birthMinute}
+                  onChangeText={setBirthMinute}
+                  placeholder="MM"
+                  placeholderTextColor="#64748B"
+                  keyboardType="numeric"
+                  maxLength={2}
+                />
+                <Text style={styles.dateSubLabel}>Min (00-59)</Text>
+              </View>
+            </View>
+
+            {/* Optional Gender */}
+            <Text style={styles.formLabel}>Gender (Optional)</Text>
             <View style={styles.genderRow}>
               <TouchableOpacity
                 style={[styles.genderBtn, gender === 'male' && styles.genderBtnActive]}
-                onPress={() => setGender('male')}
+                onPress={() => setGender(gender === 'male' ? '' : 'male')}
               >
                 <Text style={[styles.genderText, gender === 'male' && styles.genderTextActive]}>♂ Male</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.genderBtn, gender === 'female' && styles.genderBtnActive]}
-                onPress={() => setGender('female')}
+                onPress={() => setGender(gender === 'female' ? '' : 'female')}
               >
                 <Text style={[styles.genderText, gender === 'female' && styles.genderTextActive]}>♀ Female</Text>
               </TouchableOpacity>

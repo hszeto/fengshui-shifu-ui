@@ -104,6 +104,52 @@ export const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 8,
   },
+  dateRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 16,
+  },
+  dateColYear: {
+    flex: 2,
+  },
+  dateColMonth: {
+    flex: 1,
+  },
+  dateColDay: {
+    flex: 1,
+  },
+  dateInput: {
+    backgroundColor: colors.bgDark,
+    borderColor: colors.cardBorderLight,
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 12,
+    color: colors.textPrimary,
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  dateSubLabel: {
+    color: colors.textSecondary,
+    fontSize: 11,
+    textAlign: 'center',
+    marginTop: 4,
+  },
+  timeRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 16,
+    alignItems: 'center',
+  },
+  timeCol: {
+    flex: 1,
+  },
+  timeSeparator: {
+    color: colors.textSecondary,
+    fontSize: 18,
+    fontWeight: 'bold',
+    paddingBottom: 16,
+  },
   input: {
     backgroundColor: colors.bgDark,
     borderColor: colors.cardBorderLight,
