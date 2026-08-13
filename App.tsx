@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  StyleSheet,
   Text,
   View,
   TextInput,
@@ -12,6 +11,7 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { checkApiHealth, calculateBazi, BaziCalculationResult, HealthResponse } from './src/services/api';
+import { styles } from './src/styles/appStyles';
 
 export default function App() {
   const [birthDate, setBirthDate] = useState<string>('1990-01-01');
@@ -19,6 +19,7 @@ export default function App() {
   const [loading, setLoading] = useState<boolean>(false);
   const [apiHealth, setApiHealth] = useState<HealthResponse | null>(null);
   const [baziResult, setBaziResult] = useState<BaziCalculationResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Check backend API connection status
@@ -29,10 +30,17 @@ export default function App() {
 
   const handleCalculate = async (dateToUse?: string, genderToUse?: string) => {
     setLoading(true);
+    setError(null);
+
     const targetDate = dateToUse || birthDate;
     const targetGender = genderToUse || gender;
     const res = await calculateBazi(targetDate, targetGender);
-    setBaziResult(res);
+
+    if (res) {
+      setBaziResult(res);
+    } else {
+      setError('Unable to connect to the server. Please try again later.');
+    }
     setLoading(false);
   };
 
@@ -55,7 +63,7 @@ export default function App() {
           <View style={styles.healthBadge}>
             <View style={[styles.statusDot, apiHealth ? styles.dotOnline : styles.dotOffline]} />
             <Text style={styles.healthText}>
-              {apiHealth ? `API Live (${apiHealth.rails_version ? 'Rails 8' : 'Online'})` : 'API Standby'}
+              Server {apiHealth ? 'Connected' : 'Standby'}
             </Text>
           </View>
         </View>
@@ -109,6 +117,13 @@ export default function App() {
             </TouchableOpacity>
           </View>
         </View>
+
+        {/* Error Banner */}
+        {error && (
+          <View style={styles.errorCard}>
+            <Text style={styles.errorText}>⚠️ {error}</Text>
+          </View>
+        )}
 
         {/* Results Card */}
         {baziResult && (
@@ -186,342 +201,3 @@ export default function App() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0F172A',
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 40,
-  },
-  navbar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#1E293B',
-  },
-  brandContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  brandIcon: {
-    fontSize: 28,
-    marginRight: 10,
-  },
-  brandTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#F8FAFC',
-  },
-  brandSubtitle: {
-    fontSize: 11,
-    color: '#94A3B8',
-  },
-  healthBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#1E293B',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 20,
-  },
-  statusDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginRight: 6,
-  },
-  dotOnline: {
-    backgroundColor: '#10B981',
-  },
-  dotOffline: {
-    backgroundColor: '#F59E0B',
-  },
-  healthText: {
-    color: '#CBD5E1',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  heroSection: {
-    marginTop: 30,
-    alignItems: 'center',
-  },
-  heroBadge: {
-    color: '#E5A93C',
-    backgroundColor: 'rgba(229, 169, 60, 0.15)',
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
-    fontSize: 13,
-    fontWeight: '600',
-    marginBottom: 12,
-  },
-  heroTitle: {
-    fontSize: 32,
-    fontWeight: '800',
-    color: '#F8FAFC',
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  heroDescription: {
-    fontSize: 15,
-    color: '#94A3B8',
-    textAlign: 'center',
-    maxWidth: 500,
-    lineHeight: 22,
-    marginBottom: 24,
-  },
-  formCard: {
-    width: '100%',
-    maxWidth: 480,
-    backgroundColor: '#1E293B',
-    padding: 24,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#334155',
-  },
-  formLabel: {
-    color: '#CBD5E1',
-    fontSize: 13,
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-  input: {
-    backgroundColor: '#0F172A',
-    borderColor: '#475569',
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    color: '#F8FAFC',
-    fontSize: 16,
-    marginBottom: 16,
-  },
-  genderRow: {
-    flexDirection: 'row',
-    gap: 12,
-    marginBottom: 20,
-  },
-  genderBtn: {
-    flex: 1,
-    paddingVertical: 10,
-    backgroundColor: '#0F172A',
-    borderWidth: 1,
-    borderColor: '#475569',
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  genderBtnActive: {
-    backgroundColor: 'rgba(217, 4, 41, 0.2)',
-    borderColor: '#D90429',
-  },
-  genderText: {
-    color: '#94A3B8',
-    fontWeight: '600',
-  },
-  genderTextActive: {
-    color: '#F8FAFC',
-  },
-  calculateBtn: {
-    backgroundColor: '#D90429',
-    paddingVertical: 14,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  calculateBtnText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-  resultsContainer: {
-    marginTop: 40,
-    width: '100%',
-  },
-  sectionHeader: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#F8FAFC',
-    marginBottom: 16,
-  },
-  resultGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 16,
-  },
-  resultCard: {
-    flex: 1,
-    minWidth: 240,
-    backgroundColor: '#1E293B',
-    padding: 20,
-    borderRadius: 14,
-    borderWidth: 1,
-  },
-  goldBorder: {
-    borderColor: '#E5A93C',
-  },
-  redBorder: {
-    borderColor: '#D90429',
-  },
-  cardTag: {
-    fontSize: 11,
-    fontWeight: 'bold',
-    color: '#94A3B8',
-    letterSpacing: 1,
-    marginBottom: 6,
-  },
-  dayMasterTitle: {
-    fontSize: 26,
-    fontWeight: '800',
-    color: '#E5A93C',
-  },
-  dayMasterChinese: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#F8FAFC',
-    marginVertical: 2,
-  },
-  kuaNumber: {
-    fontSize: 32,
-    fontWeight: '900',
-    color: '#D90429',
-  },
-  cardDesc: {
-    color: '#CBD5E1',
-    fontSize: 13,
-    marginTop: 6,
-  },
-  directionPill: {
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
-    padding: 8,
-    borderRadius: 8,
-    marginTop: 10,
-  },
-  directionText: {
-    color: '#10B981',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  teaserCard: {
-    backgroundColor: 'rgba(30, 41, 59, 0.9)',
-    borderColor: '#475569',
-    borderWidth: 1,
-    padding: 16,
-    borderRadius: 12,
-    marginTop: 16,
-  },
-  teaserBadge: {
-    color: '#38BDF8',
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  teaserText: {
-    color: '#F1F5F9',
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  almanacSection: {
-    marginTop: 40,
-  },
-  almanacGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 16,
-  },
-  almanacBoxGood: {
-    flex: 1,
-    minWidth: 240,
-    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-    borderColor: 'rgba(16, 185, 129, 0.3)',
-    borderWidth: 1,
-    padding: 16,
-    borderRadius: 12,
-  },
-  almanacLabelGood: {
-    color: '#10B981',
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  almanacBoxAvoid: {
-    flex: 1,
-    minWidth: 240,
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
-    borderColor: 'rgba(239, 68, 68, 0.3)',
-    borderWidth: 1,
-    padding: 16,
-    borderRadius: 12,
-  },
-  almanacLabelAvoid: {
-    color: '#EF4444',
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  almanacItem: {
-    color: '#CBD5E1',
-    fontSize: 13,
-    marginVertical: 2,
-  },
-  ctaBanner: {
-    marginTop: 40,
-    backgroundColor: 'linear-gradient(135deg, #1E1B4B 0%, #31103F 100%)',
-    backgroundColorFallback: '#1E1B4B',
-    padding: 28,
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: '#6366F1',
-    alignItems: 'center',
-  },
-  ctaTag: {
-    color: '#A855F7',
-    fontWeight: 'bold',
-    fontSize: 12,
-    letterSpacing: 1,
-    marginBottom: 8,
-  },
-  ctaTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  ctaSubtitle: {
-    color: '#C084FC',
-    fontSize: 14,
-    textAlign: 'center',
-    maxWidth: 500,
-    lineHeight: 20,
-    marginBottom: 20,
-  },
-  ctaBtn: {
-    backgroundColor: '#9333EA',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 10,
-  },
-  ctaBtnText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    fontSize: 15,
-  },
-  footer: {
-    marginTop: 50,
-    alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: '#1E293B',
-    paddingTop: 20,
-  },
-  footerText: {
-    color: '#64748B',
-    fontSize: 12,
-  },
-  footerSub: {
-    color: '#475569',
-    fontSize: 11,
-    marginTop: 4,
-  },
-});
