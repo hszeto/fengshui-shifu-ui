@@ -26,7 +26,7 @@ jobs:
       - name: Build Web Bundle
         run: npx expo export -p web
         env:
-          EXPO_PUBLIC_API_URL: https://api.fengshui-shifu.com/api/v1
+          EXPO_PUBLIC_API_URL: http://api.fengshui-shifu.com/api/v1
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
