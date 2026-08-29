@@ -24,14 +24,15 @@ export interface BaziCalculationResult {
     chinese: string;
     animal: string;
   };
-  kua_number: number;
+  kua_number: number | null;
+  // null whenever gender is absent — the API omits the Kua entirely.
   kua_profile: {
     group: string;
     sheng_qi: string;
     tian_yi: string;
     yan_nian: string;
     fu_wei: string;
-  };
+  } | null;
   today_luck_teaser: string;
   birth_time?: string;
   hour_branch?: {

@@ -226,6 +226,9 @@ export const styles = StyleSheet.create({
   redBorder: {
     borderColor: colors.red,
   },
+  greenBorder: {
+    borderColor: colors.green,
+  },
   cardTag: {
     fontSize: 11,
     fontWeight: 'bold',
@@ -254,16 +257,53 @@ export const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 6,
   },
-  directionPill: {
-    backgroundColor: colors.greenBgLight,
-    padding: 8,
-    borderRadius: 8,
-    marginTop: 10,
+  // Full-width card below resultGrid — modelled on teaserCard, deliberately not
+  // a resultCard: it must not join the flex row, or it would stretch its
+  // siblings to its own height.
+  baZhaiCard: {
+    backgroundColor: colors.cardBg,
+    borderWidth: 1,
+    padding: 20,
+    borderRadius: 14,
+    marginTop: 16,
   },
-  directionText: {
-    color: colors.green,
+  directionGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    marginTop: 12,
+  },
+  // 47% (not 50%) leaves room for the row gap, so two pills fit without
+  // overflowing; minWidth drops them to one per row on narrow screens.
+  directionCell: {
+    flexGrow: 1,
+    flexBasis: '47%',
+    minWidth: 150,
+    backgroundColor: colors.greenBgLight,
+    padding: 12,
+    borderRadius: 10,
+  },
+  directionCellTag: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    color: colors.textSecondary,
+    letterSpacing: 0.5,
+  },
+  directionCellMeaning: {
     fontSize: 12,
-    fontWeight: '600',
+    color: colors.textMuted,
+    marginTop: 2,
+  },
+  directionCellCompassRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  directionCellCompass: {
+    color: colors.green,
+    fontSize: 16,
+    fontWeight: '700',
+    marginLeft: 6,
   },
   teaserCard: {
     backgroundColor: colors.teaserBg,

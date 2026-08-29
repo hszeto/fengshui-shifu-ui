@@ -12,6 +12,8 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { checkApiHealth, calculateBazi, BaziCalculationResult, HealthResponse } from './src/services/api';
 import { styles } from './src/styles/appStyles';
+import { colors } from './src/styles/colors';
+import { AUSPICIOUS_DIRECTIONS, resolveCompass } from './src/constants/kuaDirections';
 
 export default function App() {
   const [birthYear, setBirthYear] = useState<string>('1990');
@@ -296,14 +298,42 @@ export default function App() {
                   <Text style={styles.cardTag}>KUA NUMBER (卦号)</Text>
                   <Text style={styles.kuaNumber}>#{baziResult.kua_number}</Text>
                   <Text style={styles.cardDesc}>Group: {baziResult.kua_profile.group} Group</Text>
-                  <View style={styles.directionPill}>
-                    <Text style={styles.directionText}>
-                      Top Wealth Direction: {baziResult.kua_profile.sheng_qi} (Sheng Qi)
-                    </Text>
-                  </View>
                 </View>
               )}
             </View>
+
+            {/* Ba Zhai (八宅) auspicious directions.
+                Full width, deliberately OUTSIDE resultGrid — as a flex peer it
+                would stretch every card on that row to its own height. */}
+            {baziResult.kua_profile && (
+              <View style={[styles.baZhaiCard, styles.greenBorder]}>
+                <Text style={styles.cardTag}>BA ZHAI DIRECTIONS (八宅)</Text>
+                <View style={styles.directionGrid}>
+                  {AUSPICIOUS_DIRECTIONS.map((dir) => {
+                    const abbrev = baziResult.kua_profile[dir.key];
+                    const compass = resolveCompass(abbrev);
+                    return (
+                      <View key={dir.key} style={styles.directionCell}>
+                        <Text style={styles.directionCellTag}>{dir.tag}</Text>
+                        <Text style={styles.directionCellMeaning}>{dir.meaning}</Text>
+                        <View style={styles.directionCellCompassRow}>
+                          {compass.icon && (
+                            <MaterialCommunityIcons
+                              name={compass.icon}
+                              size={18}
+                              color={colors.green}
+                            />
+                          )}
+                          <Text style={styles.directionCellCompass}>
+                            {compass.label} ({abbrev})
+                          </Text>
+                        </View>
+                      </View>
+                    );
+                  })}
+                </View>
+              </View>
+            )}
 
             {/* Daily Forecast Teaser */}
             <View style={styles.teaserCard}>
