@@ -6,6 +6,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This file starts with the Ba Zhai directions card — changes before that point
 live only in the git history and have not been backfilled.
 
+## [1.1.1] - 2026-08-29
+
+### Changed
+
+- The selected **Female** gender button is now pink (`#EC4899`) instead of red.
+  Both buttons previously shared one selected style, so Female was
+  indistinguishable from Male. Male is unchanged.
+
 ## [1.1.0] - 2026-08-29
 
 ### Added

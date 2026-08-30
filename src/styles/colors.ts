@@ -9,6 +9,8 @@ export const colors = {
   goldBgLight: 'rgba(229, 169, 60, 0.15)',
   red: '#D90429',
   redBgLight: 'rgba(217, 4, 41, 0.2)',
+  pink: '#EC4899',
+  pinkBgLight: 'rgba(236, 72, 153, 0.2)',
   green: '#10B981',
   greenBgLight: 'rgba(16, 185, 129, 0.15)',
   greenBoxBg: 'rgba(16, 185, 129, 0.1)',

@@ -224,7 +224,7 @@ export default function App() {
                 <Text style={[styles.genderText, gender === 'male' && styles.genderTextActive]}>♂ Male</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.genderBtn, gender === 'female' && styles.genderBtnActive]}
+                style={[styles.genderBtn, gender === 'female' && styles.genderBtnActiveFemale]}
                 onPress={() => setGender(gender === 'female' ? '' : 'female')}
               >
                 <Text style={[styles.genderText, gender === 'female' && styles.genderTextActive]}>♀ Female</Text>
