@@ -179,6 +179,10 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.redBgLight,
     borderColor: colors.red,
   },
+  genderBtnActiveFemale: {
+    backgroundColor: colors.pinkBgLight,
+    borderColor: colors.pink,
+  },
   genderText: {
     color: colors.textSecondary,
     fontWeight: '600',
